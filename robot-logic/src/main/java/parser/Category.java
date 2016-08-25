@@ -20,6 +20,7 @@ public enum Category {
 
     /**
      * Method to obtain the description of the category.
+     *
      * @return string with the description of particular category.
      */
     public String getDescription() {
