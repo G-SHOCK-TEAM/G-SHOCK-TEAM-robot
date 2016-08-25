@@ -1,7 +1,7 @@
 package book;
 
 import lombok.Builder;
-import parser.Category;
+import controller.Category;
 
 import java.util.List;
 

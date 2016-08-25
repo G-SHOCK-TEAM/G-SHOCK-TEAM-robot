@@ -1,4 +1,4 @@
-package parser;
+package controller;
 
 /**
  * Enum which represents all available categories in the application.
