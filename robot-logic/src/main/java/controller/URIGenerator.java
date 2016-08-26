@@ -1,5 +1,7 @@
 package controller;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.valueOf;
@@ -13,6 +15,16 @@ public class URIGenerator {
 
     private final String baseURI;
     private AtomicInteger currentIndex;
+
+    /**
+     * Starting with value 1 of internal counter;
+     *
+     * @param baseURI - String representing the base URI of the web page.
+     */
+    URIGenerator(String baseURI) {
+        this.baseURI = baseURI;
+        currentIndex = new AtomicInteger(1);
+    }
 
     /**
      * The main URIGenerator constructor.
@@ -32,5 +44,19 @@ public class URIGenerator {
      */
     String generateNextFullURI() {
         return baseURI.replace("###", valueOf(currentIndex.getAndIncrement()));
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31).append(baseURI).append(currentIndex).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object generator) {
+        if (this == generator) return true;
+        if (generator == null || !(this.getClass().equals(generator.getClass())))
+            return false;
+        URIGenerator URIGeneratorObject = (URIGenerator) generator;
+        return URIGeneratorObject.baseURI.equals(baseURI) && URIGeneratorObject.currentIndex.equals(currentIndex);
     }
 }
