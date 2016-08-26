@@ -1,11 +1,10 @@
-package parser;
+package book;
 
-import controller.Category;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static book.Category.*;
 import static org.testng.Assert.assertEquals;
-import static controller.Category.*;
 
 @Test()
 public class CategoryTest {

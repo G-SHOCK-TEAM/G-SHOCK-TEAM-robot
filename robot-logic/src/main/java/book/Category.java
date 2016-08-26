@@ -1,4 +1,4 @@
-package controller;
+package book;
 
 /**
  * Enum which represents all available categories in the application.
