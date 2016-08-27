@@ -1,12 +1,15 @@
 package controller;
 
+import book.Book;
 import book.Category;
 import parser.EbooksComParser;
 import parser.Parser;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static book.Category.*;
 
@@ -16,9 +19,11 @@ import static book.Category.*;
  * is created. The thread takes another mapping (which is a value inside fullMappings map) as an argument.
  * The class also contains the list of available parser classes (which is passed by a constructor).
  */
-public class MainController {
+public final class MainController {
 
+    private static final int MAX_QUEUE_SIZE = 1000;
     private final Map<Class<? extends Parser>, Map<Category, List<URIGenerator>>> fullMappings;
+    private final BlockingQueue<Book> bookQueue = new LinkedBlockingQueue<>(MAX_QUEUE_SIZE);
 
     /**
      * Default constructor.
@@ -32,7 +37,7 @@ public class MainController {
      */
     public void launch() {
         ExecutorService executor = Executors.newFixedThreadPool(fullMappings.size());
-        fullMappings.keySet().forEach(e -> executor.submit(new ParserClassThread(e, fullMappings.get(e))));
+        fullMappings.keySet().forEach(e -> executor.submit(new ParserClassThread(e, fullMappings.get(e), bookQueue)));
         executor.shutdown();
     }
 

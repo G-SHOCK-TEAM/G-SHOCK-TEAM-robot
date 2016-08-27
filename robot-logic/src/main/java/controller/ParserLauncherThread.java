@@ -1,23 +1,21 @@
 package controller;
 
+import book.Book;
 import parser.Parser;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
 /**
  * Class to launch the constant size thread pool of parsers.
  */
-class ParserLauncherThread implements Runnable {
+final class ParserLauncherThread implements Runnable {
     private final Class<? extends Parser> parserClass;
     private final URIGenerator generator;
+    private final BlockingQueue<Book> rootQueue;
 
     private static final int POOL_SIZE = 10;
-
     private boolean executing = true;
 
 
@@ -30,9 +28,10 @@ class ParserLauncherThread implements Runnable {
     }
 
 
-    ParserLauncherThread(final Class<? extends Parser> parserClass, final URIGenerator generator) {
+    ParserLauncherThread(final Class<? extends Parser> parserClass, final URIGenerator generator, final BlockingQueue<Book> queue) {
         this.parserClass = parserClass;
         this.generator = generator;
+        rootQueue = queue;
     }
 
 
@@ -42,10 +41,6 @@ class ParserLauncherThread implements Runnable {
         ExecutorService executor = Executors.newFixedThreadPool(POOL_SIZE);
         LinkedBlockingQueue<ParserWrapperThread> queue = new LinkedBlockingQueue<>();
 
-        // TODO: remove later - after changing the flag from child thread is implemented
-        // just for test
-        int i = 0;
-
         while (isExecuting()) {
 
             try {
@@ -53,11 +48,8 @@ class ParserLauncherThread implements Runnable {
                 int toRun = POOL_SIZE - count;
 
                 if (toRun > 0) {
-                    queue.put(new ParserWrapperThread(parserClass, generator.generateNextFullURI(), this));
+                    queue.put(new ParserWrapperThread(parserClass, generator.generateNextFullURI(), this, rootQueue));
                     --toRun;
-
-                    // TODO: remove later
-                    i++;
                 }
 
                 if (queue.size() > 0) {
@@ -65,9 +57,6 @@ class ParserLauncherThread implements Runnable {
                 }
 
                 sleep(10);
-
-                // TODO: remove later
-                if (i == 50) resetExecutingFlag();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
