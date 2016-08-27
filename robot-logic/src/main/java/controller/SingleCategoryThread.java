@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread for single Category.
  */
-public class SingleCategoryThread implements Runnable {
+class SingleCategoryThread implements Runnable {
     private final Class<? extends Parser> parserClass;
     private final List<URIGenerator> listOfURIGenerators;
 
@@ -25,7 +25,7 @@ public class SingleCategoryThread implements Runnable {
     @Override
     public void run() {
         ExecutorService executor = Executors.newFixedThreadPool(listOfURIGenerators.size());
-        listOfURIGenerators.forEach(e -> executor.submit(new ParserWrapperThread(parserClass, e)));
+        listOfURIGenerators.forEach(e -> executor.submit(new ParserLauncherThread(parserClass, e)));
         executor.shutdown();
     }
 }

@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
  * The root of the tree structure of thread tree. Propagates the mappings from the single parser class
  * to the children threads.
  */
-public class ParserClassThread implements Runnable {
+class ParserClassThread implements Runnable {
     private final Class<? extends Parser> parserClass;
     private final Map<Category, List<URIGenerator>> categoryMappings;
 
