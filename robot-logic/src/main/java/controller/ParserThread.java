@@ -1,17 +1,42 @@
 package controller;
 
 import book.Book;
+import parser.Parser;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Parser thread - launches parser and shows the results
  */
 final class ParserThread implements Callable<List<Book>> {
+
+    private final Parser parser;
+    private final String link;
+
+    ParserThread(Class<? extends Parser> parserClass, String URI) {
+        parser = createParser(parserClass, URI);
+        link = URI;
+    }
+
+    private static Parser createParser(Class<? extends Parser> parserClass, String URI) {
+        Parser parser = null;
+
+        try {
+            parser = parserClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        return parser;
+    }
+
     @Override
     public List<Book> call() throws Exception {
-        System.out.println("dummy call...");
-        return null;
+        //delay simulation
+        sleep(1000);
+        return parser.parse(link);
     }
 }

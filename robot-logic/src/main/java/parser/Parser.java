@@ -13,5 +13,5 @@ public interface Parser {
     /**
      * Method to find the data which is to be stored in DB.
      */
-    List<Book> parse();
+    List<Book> parse(String link);
 }

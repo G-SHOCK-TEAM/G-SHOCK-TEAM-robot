@@ -43,7 +43,7 @@ final class ParserWrapperThread implements Runnable {
 
     @Override
     public void run() {
-        Callable<List<Book>> callable = new ParserThread();
+        Callable<List<Book>> callable = new ParserThread(parserClass, URIToParse);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<List<Book>> futureListOfBooks = executor.submit(callable);
 

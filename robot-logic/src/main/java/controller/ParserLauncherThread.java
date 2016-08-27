@@ -15,7 +15,7 @@ final class ParserLauncherThread implements Runnable {
     private final URIGenerator generator;
     private final BlockingQueue<Book> rootQueue;
 
-    private static final int POOL_SIZE = 10;
+    private static final int MAX_POOL_SIZE = 10;
     private boolean executing = true;
 
 
@@ -38,15 +38,15 @@ final class ParserLauncherThread implements Runnable {
     @Override
     public void run() {
 
-        ExecutorService executor = Executors.newFixedThreadPool(POOL_SIZE);
+        ExecutorService executor = Executors.newFixedThreadPool(MAX_POOL_SIZE);
         LinkedBlockingQueue<ParserWrapperThread> queue = new LinkedBlockingQueue<>();
 
         while (isExecuting()) {
 
             try {
                 int count = ((ThreadPoolExecutor) executor).getActiveCount();
-                int toRun = POOL_SIZE - count;
-
+                int toRun = MAX_POOL_SIZE - count;
+                System.out.println(toRun);
                 if (toRun > 0) {
                     queue.put(new ParserWrapperThread(parserClass, generator.generateNextFullURI(), this, rootQueue));
                     --toRun;
@@ -56,7 +56,7 @@ final class ParserLauncherThread implements Runnable {
                     executor.execute(queue.take());
                 }
 
-                sleep(10);
+                sleep(100);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
