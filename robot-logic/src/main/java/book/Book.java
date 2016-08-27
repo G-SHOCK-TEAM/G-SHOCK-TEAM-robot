@@ -18,4 +18,10 @@ public class Book {
     private final Category category;
 
     // TODO: add some mothods to describe the behaviour
+
+    // dummy, just for tests
+    @Override
+    public String toString() {
+        return title;
+    }
 }

@@ -11,7 +11,7 @@ public class EbooksComParser implements Parser {
 
     @Override
     public List<Book> parse(String link) {
-        System.out.println(link);
+
         return null;
     }
 }

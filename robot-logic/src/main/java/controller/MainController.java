@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static book.Category.*;
+import static java.lang.Thread.sleep;
 
 /**
  * This class is the main controller of creeper. The main goal of the class is to create an object
@@ -36,9 +37,31 @@ public final class MainController {
      * Launches new parser threads for all different types of parsers.
      */
     public void launch() {
-        ExecutorService executor = Executors.newFixedThreadPool(fullMappings.size());
-        fullMappings.keySet().forEach(e -> executor.submit(new ParserClassThread(e, fullMappings.get(e), bookQueue)));
-        executor.shutdown();
+        ExecutorService mainExecutor = Executors.newFixedThreadPool(fullMappings.size());
+        ExecutorService queueExecutor = Executors.newSingleThreadExecutor();    // just single for now...
+        fullMappings.keySet().forEach(e -> mainExecutor.submit(new ParserClassThread(e, fullMappings.get(e), bookQueue)));
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        BooksConsumerThread consumerThread = new BooksConsumerThread(bookQueue);
+        queueExecutor.submit(consumerThread);
+
+        mainExecutor.shutdown();
+
+        while (!mainExecutor.isTerminated()) {
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        consumerThread.stopRunning();
+
+        queueExecutor.shutdown();
     }
 
 

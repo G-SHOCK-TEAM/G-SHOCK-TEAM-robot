@@ -46,7 +46,7 @@ final class ParserLauncherThread implements Runnable {
             try {
                 int count = ((ThreadPoolExecutor) executor).getActiveCount();
                 int toRun = MAX_POOL_SIZE - count;
-                System.out.println(toRun);
+
                 if (toRun > 0) {
                     queue.put(new ParserWrapperThread(parserClass, generator.generateNextFullURI(), this, rootQueue));
                     --toRun;
