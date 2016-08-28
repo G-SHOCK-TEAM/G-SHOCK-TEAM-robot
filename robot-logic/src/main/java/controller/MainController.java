@@ -6,12 +6,10 @@ import parser.EbooksComParser;
 import parser.Parser;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 import static book.Category.*;
+import static java.lang.Thread.MAX_PRIORITY;
 import static java.lang.Thread.sleep;
 
 /**
@@ -47,21 +45,24 @@ public final class MainController {
         }
 
         BooksConsumerThread consumerThread = new BooksConsumerThread(bookQueue);
+
         queueExecutor.submit(consumerThread);
 
         mainExecutor.shutdown();
 
-        while (!mainExecutor.isTerminated()) {
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (!mainExecutor.isTerminated()) {
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
-        consumerThread.stopRunning();
+
+//        consumerThread.stopRunning();
 
         queueExecutor.shutdown();
+
     }
 
 

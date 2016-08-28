@@ -4,7 +4,6 @@ import book.Book;
 
 import java.util.concurrent.BlockingQueue;
 
-import static java.lang.Thread.sleep;
 
 final class BooksConsumerThread implements Runnable {
 
@@ -31,17 +30,17 @@ final class BooksConsumerThread implements Runnable {
         // TODO: add stop conditions  - from parent thread
         // or consider creating cyclic task instead of one thread
         while (running()) {
-            try {
-                if (!rootQueue.isEmpty()) {
-                    //
-                    Book tmpBook = rootQueue.take();
-                    System.out.println(tmpBook);
-                }
 
-                sleep(500);
+            Book tmpBook = null;
+
+            try {
+                tmpBook = rootQueue.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            System.out.println(tmpBook);
+
         }
     }
 }

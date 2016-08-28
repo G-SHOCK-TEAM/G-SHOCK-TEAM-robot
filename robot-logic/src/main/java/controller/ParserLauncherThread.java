@@ -15,7 +15,7 @@ final class ParserLauncherThread implements Runnable {
     private final URIGenerator generator;
     private final BlockingQueue<Book> rootQueue;
 
-    private static final int MAX_POOL_SIZE = 10;
+    private static final int MAX_POOL_SIZE = 5;
     private boolean executing = true;
 
 

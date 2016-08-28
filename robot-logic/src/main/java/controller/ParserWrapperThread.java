@@ -37,7 +37,14 @@ final class ParserWrapperThread implements Runnable {
         }
 
         if (!list.isEmpty()) {
-            rootQueue.addAll(list);
+            list.forEach(e -> {
+                try {
+                    rootQueue.put(e);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            });
+
         }
     }
 
