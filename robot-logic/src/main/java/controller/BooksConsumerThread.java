@@ -24,6 +24,7 @@ final class BooksConsumerThread implements Runnable {
     }
 
     // TODO: DB connection
+    // TODO: consider more than one thread (it will be faster then)
     @Override
     public void run() {
 

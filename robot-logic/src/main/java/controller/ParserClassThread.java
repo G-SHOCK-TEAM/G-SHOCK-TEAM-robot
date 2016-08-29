@@ -30,7 +30,7 @@ final class ParserClassThread implements Runnable {
     @Override
     public void run() {
         ExecutorService executor = Executors.newFixedThreadPool(categoryMappings.size());
-        categoryMappings.keySet().forEach(e -> executor.submit(new SingleCategoryThread(parserClass, categoryMappings.get(e), rootQueue)));
+        categoryMappings.keySet().forEach(e -> executor.submit(new SingleCategoryThread(parserClass, categoryMappings.get(e), rootQueue, e)));
         executor.shutdown();
 
         try {

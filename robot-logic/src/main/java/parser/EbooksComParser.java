@@ -1,6 +1,7 @@
 package parser;
 
 import book.Book;
+import book.Category;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -9,21 +10,29 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import static book.Book.*;
 import static org.jsoup.Jsoup.*;
 
 
 public class EbooksComParser implements Parser {
 
     private Document rootDocument;
+    private BookBuilder bookBuilder;
+    private Category category;
+    private String link;
 
-    public static void main(String[] args) {
-        EbooksComParser parser = new EbooksComParser();
-        parser.parse("http://www.ebooks.com/subjects/medicine/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=1");
+    public Parser setLink(String link) {
+        this.link = link;
+        return this;
     }
 
+    public Parser setCategory(Category category) {
+        this.category = category;
+        return this;
+    }
 
     @Override
-    public List<Book> parse(String link) {
+    public List<Book> parse() {
         List<Book> resultList = new LinkedList<>();
 
 
@@ -78,22 +87,10 @@ public class EbooksComParser implements Parser {
                 description = descriptionDoc.select("div.short-description").select("[itemprop]").text();
 
 
-                Book newBook = Book.builder().title(title).authors(authors).printHouse(printHouse)
-                        .year(year).currency(currency).oldPrice(oldPrice).newPrice(newPrice).description(description).build();
+                bookBuilder = builder().title(title).authors(authors).printHouse(printHouse).year(year).currency(currency)
+                        .oldPrice(oldPrice).newPrice(newPrice).description(description).link(link).category(category);
 
-                resultList.add(newBook);
-
-//                System.out.println("--------");
-//                System.out.println(title);
-//                System.out.println(authors);
-//                System.out.println(printHouse);
-//                System.out.println(year);
-//                System.out.println(currency);
-//                System.out.println(oldPrice);
-//                System.out.println(newPrice);
-//                System.out.println(description);
-//                System.out.println(link);
-//                System.out.println("--------");
+                resultList.add(bookBuilder.build());
             }
 
         } catch (IOException e) {
@@ -101,7 +98,6 @@ public class EbooksComParser implements Parser {
         }
         return resultList;
     }
-
 
     private Elements findBooks() {
         return rootDocument.select("li.search-row.clearfix");

@@ -1,6 +1,7 @@
 package controller;
 
 import book.Book;
+import book.Category;
 import parser.Parser;
 
 import java.util.List;
@@ -16,16 +17,19 @@ final class ParserWrapperThread implements Runnable {
 
     private final Class<? extends Parser> parserClass;
     private final BlockingQueue<Book> rootQueue;
+    private final Category category;
     private String URIToParse;
 
     private final ParserLauncherThread parentThread;
 
 
-    ParserWrapperThread(Class<? extends Parser> parserClass, String URIToParse, ParserLauncherThread parentThread, BlockingQueue<Book> queue) {
+    ParserWrapperThread(Class<? extends Parser> parserClass, String URIToParse, ParserLauncherThread parentThread,
+                        BlockingQueue<Book> queue, Category category) {
         this.parserClass = parserClass;
         this.URIToParse = URIToParse;
         this.parentThread = parentThread;
         rootQueue = queue;
+        this.category = category;
     }
 
     private void stopExecutingParent() {
@@ -57,7 +61,7 @@ final class ParserWrapperThread implements Runnable {
 
     @Override
     public void run() {
-        Callable<List<Book>> callable = new ParserThread(parserClass, URIToParse);
+        Callable<List<Book>> callable = new ParserThread(parserClass, category, URIToParse);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<List<Book>> futureListOfBooks = executor.submit(callable);
 

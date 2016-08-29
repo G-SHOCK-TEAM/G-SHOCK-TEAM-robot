@@ -1,6 +1,7 @@
 package parser;
 
 import book.Book;
+import book.Category;
 
 import java.util.List;
 
@@ -8,10 +9,8 @@ import java.util.List;
  * Parser interface - the main goal of the interface is to parse the data for current category
  * (obtained by JSOUP from the Internet).
  */
-@FunctionalInterface
 public interface Parser {
-    /**
-     * Method to find the data which is to be stored in DB.
-     */
-    List<Book> parse(String link);
+    List<Book> parse();
+    Parser setLink(String link);
+    Parser setCategory(Category category);
 }
