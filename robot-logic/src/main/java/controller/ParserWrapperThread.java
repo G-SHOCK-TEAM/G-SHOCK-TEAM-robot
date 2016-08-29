@@ -6,6 +6,8 @@ import parser.Parser;
 import java.util.List;
 import java.util.concurrent.*;
 
+import static java.lang.Thread.sleep;
+
 /**
  * This class is a wrapper for the threads of parser (because ParserThread is Callable). It allows to
  * avoid blocking executor at the level of ParserLauncherThread.
@@ -27,6 +29,11 @@ final class ParserWrapperThread implements Runnable {
     }
 
     private void stopExecutingParent() {
+        try {
+            sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         parentThread.resetExecutingFlag();
     }
 

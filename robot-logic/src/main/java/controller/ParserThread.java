@@ -15,11 +15,11 @@ final class ParserThread implements Callable<List<Book>> {
     private final String link;
 
     ParserThread(Class<? extends Parser> parserClass, String URI) {
-        parser = createParser(parserClass, URI);
+        parser = createParser(parserClass);
         link = URI;
     }
 
-    private static Parser createParser(Class<? extends Parser> parserClass, String URI) {
+    private static Parser createParser(Class<? extends Parser> parserClass) {
         Parser parser = null;
 
         try {

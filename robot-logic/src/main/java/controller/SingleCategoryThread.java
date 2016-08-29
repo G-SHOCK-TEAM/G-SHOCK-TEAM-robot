@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Thread for single Category.
@@ -35,5 +36,10 @@ final class SingleCategoryThread implements Runnable {
         listOfURIGenerators.forEach(e -> executor.submit(new ParserLauncherThread(parserClass, e, rootQueue)));
         executor.shutdown();
 
+        try {
+            executor.awaitTermination(1, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

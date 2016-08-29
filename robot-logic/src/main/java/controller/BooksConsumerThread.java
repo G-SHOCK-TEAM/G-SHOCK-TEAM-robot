@@ -7,8 +7,8 @@ import java.util.concurrent.BlockingQueue;
 
 final class BooksConsumerThread implements Runnable {
 
+    static long cnt = 0;
     private final BlockingQueue<Book> rootQueue;
-
     private boolean run = true;
 
     BooksConsumerThread(BlockingQueue<Book> queue) {
@@ -27,20 +27,16 @@ final class BooksConsumerThread implements Runnable {
     @Override
     public void run() {
 
-        // TODO: add stop conditions  - from parent thread
-        // or consider creating cyclic task instead of one thread
         while (running()) {
-
             Book tmpBook = null;
 
             try {
                 tmpBook = rootQueue.take();
+                System.out.println(String.valueOf(++cnt) + tmpBook);
+
             } catch (InterruptedException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
-
-            System.out.println(tmpBook);
-
         }
     }
 }

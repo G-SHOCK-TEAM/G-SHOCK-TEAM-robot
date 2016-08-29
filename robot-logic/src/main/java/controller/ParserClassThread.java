@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The root of the tree structure of thread tree. Propagates the mappings from the single parser class
@@ -31,6 +32,13 @@ final class ParserClassThread implements Runnable {
         ExecutorService executor = Executors.newFixedThreadPool(categoryMappings.size());
         categoryMappings.keySet().forEach(e -> executor.submit(new SingleCategoryThread(parserClass, categoryMappings.get(e), rootQueue)));
         executor.shutdown();
+
+        try {
+            executor.awaitTermination(1, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import static book.Category.*;
-import static java.lang.Thread.MAX_PRIORITY;
 import static java.lang.Thread.sleep;
 
 /**
@@ -31,38 +30,31 @@ public final class MainController {
         fullMappings = initialize();
     }
 
+
     /**
      * Launches new parser threads for all different types of parsers.
      */
-    public void launch() {
+    public void launch() throws InterruptedException {
         ExecutorService mainExecutor = Executors.newFixedThreadPool(fullMappings.size());
         ExecutorService queueExecutor = Executors.newSingleThreadExecutor();    // just single for now...
         fullMappings.keySet().forEach(e -> mainExecutor.submit(new ParserClassThread(e, fullMappings.get(e), bookQueue)));
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        BooksConsumerThread consumerThread = new BooksConsumerThread(bookQueue);
-
-        queueExecutor.submit(consumerThread);
-
         mainExecutor.shutdown();
 
-//        while (!mainExecutor.isTerminated()) {
-//            try {
-//                sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        sleep(1000);
 
-
-//        consumerThread.stopRunning();
-
+        BooksConsumerThread consumer = new BooksConsumerThread(bookQueue);
+        Future<?> future = queueExecutor.submit(consumer);
         queueExecutor.shutdown();
 
+        mainExecutor.awaitTermination(1, TimeUnit.DAYS);
+
+        while (bookQueue.size() != 0) {
+            sleep(100);
+        }
+
+        consumer.stopRunning();
+        future.cancel(true);
+        queueExecutor.awaitTermination(1, TimeUnit.HOURS);
     }
 
 
