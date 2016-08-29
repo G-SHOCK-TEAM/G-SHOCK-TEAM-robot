@@ -2,12 +2,14 @@ package controller;
 
 import book.Book;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 
 
 final class BooksConsumerThread implements Runnable {
 
-    static long cnt = 0;
+    //    static long cnt = 0;
     private final BlockingQueue<Book> rootQueue;
     private boolean run = true;
 
@@ -24,19 +26,19 @@ final class BooksConsumerThread implements Runnable {
     }
 
     // TODO: DB connection
-    // TODO: consider more than one thread (it will be faster then)
+
     @Override
     public void run() {
 
+        Queue<Book> drained = new LinkedList<>();
+
         while (running()) {
-            Book tmpBook = null;
 
-            try {
-                tmpBook = rootQueue.take();
-                System.out.println(String.valueOf(++cnt) + tmpBook);
+            int n = rootQueue.size();
 
-            } catch (InterruptedException e) {
-//                e.printStackTrace();
+            if (n > 0) {
+                rootQueue.drainTo(drained);
+                System.out.println(drained);
             }
         }
     }

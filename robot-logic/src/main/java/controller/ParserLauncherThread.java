@@ -18,7 +18,7 @@ final class ParserLauncherThread implements Runnable {
     private final Category category;
 
 
-    private static final int MAX_POOL_SIZE = 4;
+    private static final int MAX_POOL_SIZE = 5;
     private boolean executing = true;
 
 
