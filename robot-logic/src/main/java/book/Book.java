@@ -19,12 +19,4 @@ public class Book {
     private final Category category;
     private final String description;
     private final String link;
-
-    // TODO: add some mothods to describe the behaviour
-
-    // dummy, just for tests
-    @Override
-    public String toString() {
-        return title;
-    }
 }

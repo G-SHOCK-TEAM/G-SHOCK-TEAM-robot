@@ -21,11 +21,13 @@ public class EbooksComParser implements Parser {
     private Category category;
     private String link;
 
+    @Override
     public Parser setLink(String link) {
         this.link = link;
         return this;
     }
 
+    @Override
     public Parser setCategory(Category category) {
         this.category = category;
         return this;
@@ -37,9 +39,8 @@ public class EbooksComParser implements Parser {
 
 
         try {
-            rootDocument = connect(link).timeout(0).get();
+            rootDocument = openDocument();
             Elements booksFound = findBooks();
-
             if (booksFound.text().equals("")) {
                 return null;
             }
@@ -97,6 +98,10 @@ public class EbooksComParser implements Parser {
             e.printStackTrace();
         }
         return resultList;
+    }
+
+    Document openDocument() throws IOException {
+        return connect(link).timeout(0).get();
     }
 
     private Elements findBooks() {
