@@ -64,7 +64,7 @@ public class Book {
     @JoinColumn(name = "print_houseID")
     private PrintHouse printHouse;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @Setter
     @Getter
     private List<Author> authors;
