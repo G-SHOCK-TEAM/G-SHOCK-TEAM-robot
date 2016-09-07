@@ -1,0 +1,28 @@
+<!--Instead of & you have to use &amp; -->
+
+<links>
+    <library id="ebooks.com">
+        <category id="eduScience">
+            <link>http://www.ebooks.com/subjects/computers/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+            <link>http://www.ebooks.com/subjects/science/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+            <link>http://www.ebooks.com/subjects/education/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+            <link>http://www.ebooks.com/subjects/mathematics/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+        <category id="travel">
+            <link>http://www.ebooks.com/subjects/travel/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+        <category id="lifestyle">
+            <link>http://www.ebooks.com/subjects/sports-recreation/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+            <link>http://www.ebooks.com/subjects/family-relationships/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+        <category id="sex">
+            <link>http://www.ebooks.com/subjects/sex/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+        <category id="medicine">
+            <link>http://www.ebooks.com/subjects/medicine/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+        <category id="adventure">
+            <link>http://www.ebooks.com/subjects/crafts-hobbies/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
+        </category>
+    </library>
+</links>

@@ -11,7 +11,7 @@ import static java.lang.String.valueOf;
  * The main goal of this class is to generate next URI to parse. The class contains base URI string and a thread safe
  * counter to generate current index. The index is put in the place of ### pattern in the base string.
  */
-class URIGenerator {
+public class URIGenerator {
 
     private final String baseURI;
     private AtomicInteger currentIndex;
@@ -21,7 +21,7 @@ class URIGenerator {
      *
      * @param baseURI - String representing the base URI of the web page.
      */
-    URIGenerator(String baseURI) {
+    public URIGenerator(String baseURI) {
         this.baseURI = baseURI;
         currentIndex = new AtomicInteger(1);
     }
