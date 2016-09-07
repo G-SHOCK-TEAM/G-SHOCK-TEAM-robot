@@ -15,12 +15,8 @@ import java.util.Optional;
 
 import static org.jsoup.Jsoup.connect;
 
-/**
- * Parser implementation for ebooks.com.
- * Warning: the code is a bit imperative - it might be reworked later.
- */
 @Slf4j
-public class EbooksComParser implements Parser {
+public class HelionParser implements Parser {
 
 
     private Document rootDocument;
@@ -28,23 +24,9 @@ public class EbooksComParser implements Parser {
     private CategoryName category;
     private String link;
 
-
     @Override
-    public Parser setLink(String link) {
-        this.link = link;
-        return this;
-    }
-
-    @Override
-    public Parser setCategory(CategoryName category) {
-        this.category = category;
-        return this;
-    }
-
-    @Override
-    public Optional<List<ParsedBook>> parse() {
+    public Optional<List<ParsedBook>> parse () {
         List<ParsedBook> resultList = new LinkedList<>();
-
 
         try {
             rootDocument = openDocument();
@@ -53,56 +35,46 @@ public class EbooksComParser implements Parser {
                 return Optional.empty();
             }
 
-
             for (Element e : booksFound) {
 
-                // old price - to check if it is on discount
-                String old = e.select("div.additional-info > span > span").select("[style*=text-decoration:line-through]").text();
+                String old = e.select("p.price-incart > del").text();
 
                 if ("".equals(old)) {
                     continue;
                 }
 
-                // variables
                 String title;
                 String printHouse;
                 String description;
                 String currency;
                 List<String> authors = new LinkedList<>();
-                short year;
 
-                // currency
-                currency = String.valueOf(old.charAt(0));
+                String[] priceCurrency = old.split(" ");
 
-                // old price
+                currency = String.valueOf(priceCurrency[1]);
+
                 float oldPrice = Float.parseFloat(old.replace(currency, "").trim());
 
-                // new price
-                float newPrice = Float.parseFloat(e.select("div.additional-info > span > span").text().replace(old, "").replace(currency, "").trim());
+                float newPrice = Float.parseFloat(
+                        e.select("p.price-incart > a > ins > span ").text().replace(currency, "").trim());
 
-                // title
-                title = e.select("h4 > span.book-title > a").text();
+                title = e.select("div.book-info > div > h3").text();
 
-                // find authors
-                Elements authorsSet = e.select("h4 > span.author > a");
+                Elements authorsSet = e.select("div.book-info > div > p");
+
                 authorsSet.forEach(author -> authors.add(author.text()));
 
-                // print house
-                printHouse = e.select("div.additional-info > span").first().text();
+                String bookLink = e.select("a.niemby-link").first().attr("abs:href");
 
-                // year
-                year = Short.valueOf(e.select("div.additional-info > span").first().nextElementSibling().text().replace(";", ""));
+                Document bookDoc = connect(bookLink).timeout(0).get();
 
-                // description
-                String descriptionLink = e.select("p > a").first().attr("abs:href");
-                Document descriptionDoc = connect(descriptionLink).timeout(0).get();
-                description = descriptionDoc.select("div.short-description").select("[itemprop]").text();
+                printHouse = bookDoc.select("div.select_ebook > dd > a").first().text();
 
+                description = bookDoc.select("div.book-description > div.text > div").text();
 
                 parsedBookBuilder = ParsedBook
                         .builder()
                         .title(title)
-                        .year(year)
                         .currency(currency)
                         .authors(authors)
                         .category(category)
@@ -110,7 +82,7 @@ public class EbooksComParser implements Parser {
                         .oldPrice(oldPrice)
                         .newPrice(newPrice)
                         .description(description)
-                        .link(descriptionLink);
+                        .link(bookLink);
 
                 resultList.add(parsedBookBuilder.build());
             }
@@ -121,13 +93,23 @@ public class EbooksComParser implements Parser {
         return Optional.of(resultList);
     }
 
+    @Override
+    public Parser setLink (String link) {
+        this.link = link;
+        return this;
+    }
 
-    Document openDocument() throws IOException {
+    @Override
+    public Parser setCategory (CategoryName category) {
+        this.category = category;
+        return this;
+    }
+
+    private Document openDocument () throws IOException {
         return connect(link).timeout(0).get();
     }
 
-    private Elements findBooks() {
-        return rootDocument.select("li.search-row.clearfix");
+    private Elements findBooks () {
+        return rootDocument.select("li.classPresale");
     }
-
 }
