@@ -35,7 +35,7 @@ class PrintHouseManager {
      * @return category from the memory
      */
     PrintHouse getPrintHouse (String name) {
-        if (!printHouses.containsKey(name)) {
+        if (printHouses.containsKey(name)) {
             return printHouses.get(name);
         }
         PrintHouse printHouse = PrintHouse.builder().name(name).build();

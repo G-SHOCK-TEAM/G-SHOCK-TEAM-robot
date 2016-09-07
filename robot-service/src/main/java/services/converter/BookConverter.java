@@ -1,6 +1,7 @@
 package services.converter;
 
 import dao.BookDAO;
+import dao.BookReadDAO;
 import domain.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,11 +15,11 @@ import java.util.stream.Collectors;
 public class BookConverter {
 
     @Autowired
-    private BookDAO bookDAO;
+    private BookReadDAO bookDAO;
 
     public List<ParsedBook> getBooksFromPage(int pageNumber) {
         return  bookDAO.findAll(new PageRequest(pageNumber, 12)).getContent().stream().map(book -> ParsedBook.builder().
-                authors(book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()))
+                authors(book.getReadAuthors().stream().map(Author::getName).collect(Collectors.toList()))
                 .description(book.getDescription())
                 .year(book.getYear())
                 .category(book.getCategory().getName())

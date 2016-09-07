@@ -14,6 +14,7 @@ import java.util.List;
  * The instance of book can be created by a builder.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

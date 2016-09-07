@@ -32,6 +32,11 @@ public class Author {
     @Setter
     private Collection<Book> books;
 
+    @ManyToMany(mappedBy = "readAuthors")
+    @Getter
+    @Setter
+    private Collection<BookReader> bookReaders;
+
     @Override
     public String toString () {
         return new StringBuilder("Author{authorId=")
