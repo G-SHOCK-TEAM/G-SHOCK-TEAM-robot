@@ -19,19 +19,6 @@ public class URIGeneratorTest {
         };
     }
 
-
-    @DataProvider(name = "URIsequence")
-    private Object[][] provideURISequence() {
-        final URIGenerator generator = new URIGenerator("http://www.something.com/books/ebook?list=###&sortBy=asc", 0);
-
-        return new Object[][]{
-                new Object[]{generator.generateNextFullURI(), "http://www.something.com/books/ebook?list=0&sortBy=asc"},
-                new Object[]{generator.generateNextFullURI(), "http://www.something.com/books/ebook?list=1&sortBy=asc"},
-                new Object[]{generator.generateNextFullURI(), "http://www.something.com/books/ebook?list=2&sortBy=asc"},
-                new Object[]{generator.generateNextFullURI(), "http://www.something.com/books/ebook?list=3&sortBy=asc"}
-        };
-    }
-
     @DataProvider(name = "URIsequenceSingleArg")
     private Object[][] provideSequenceWithSingleArgs() {
         final URIGenerator generator = new URIGenerator("http://www.something.com/logic.book=###");
@@ -43,35 +30,16 @@ public class URIGeneratorTest {
         };
     }
 
+    @DataProvider(name = "URISequenceWithDelta")
+    private Object[][] provideSequenceWithNonDefaultDeltaConstructorArg() {
+        final URIGenerator generator = new URIGenerator("http://www.something.com/logic.book=###", 40);
 
-    /**
-     * Simple test of generating sequences by URIGenerator.
-     *
-     * @param base          - base string
-     * @param startingIndex - starting index (to replace ### pattern)
-     * @param expected      - expected result
-     */
-    @Test(dataProvider = "URIdataSingle")
-    public void testGeneratingFirstURI(String base, int startingIndex, String expected) {
-        // given
-        URIGenerator generator = new URIGenerator(base, startingIndex);
-        // when
-        String result = generator.generateNextFullURI();
-        //then
-        assertEquals(result, expected);
-    }
-
-
-    /**
-     * Simple test of generating sequences staring with default (1) starting index
-     *
-     * @param actual   - generated string (link)
-     * @param expected - expected link
-     */
-    @Test(dataProvider = "URIsequence")
-    public void testSequence(String actual, String expected) {
-        //then
-        assertEquals(actual, expected);
+        return new Object[][]{
+                new Object[]{generator.generateNextFullURI(), "http://www.something.com/logic.book=1"},
+                new Object[]{generator.generateNextFullURI(), "http://www.something.com/logic.book=41"},
+                new Object[]{generator.generateNextFullURI(), "http://www.something.com/logic.book=81"},
+                new Object[]{generator.generateNextFullURI(), "http://www.something.com/logic.book=121"}
+        };
     }
 
     /**
@@ -125,5 +93,57 @@ public class URIGeneratorTest {
         assertFalse(u1.equals(new Integer(4)));
         assertFalse(u1.equals(u3));
         assertFalse(u2.equals(u1.generateNextFullURI()));
+    }
+
+    /**
+     * Hashcode test with deltas
+     */
+    @Test
+    public void hashCodeTestWithDeltas() {
+        // given
+        URIGenerator u1 = new URIGenerator("aa", 40);
+        URIGenerator u2 = new URIGenerator("bb", 40);
+        URIGenerator u3 = new URIGenerator("aa");
+        URIGenerator u4 = new URIGenerator("aa", 40);
+
+        // when, then
+        assertEquals(u1.hashCode(), u1.hashCode());
+        assertNotEquals(u1.hashCode(), u2.hashCode());
+        assertNotEquals(u2.hashCode(), u3.hashCode());
+        assertNotEquals(u1.hashCode(), u3.hashCode());
+        assertEquals(u1.hashCode(), u4.hashCode());
+    }
+
+    /**
+     * Equality test with deltas
+     */
+    @Test
+    public void equalityTestWithDeltas() {
+        // given
+        URIGenerator u1 = new URIGenerator("aa", 40);
+        URIGenerator u2 = new URIGenerator("bb", 40);
+        URIGenerator u3 = new URIGenerator("aa");
+        URIGenerator u4 = new URIGenerator("aa", 40);
+
+        // when, then
+        assertFalse(u1.equals(u2));
+        assertFalse(u2.equals(u1));
+        assertFalse(u1.equals(u3));
+        assertFalse(u3.equals(u1));
+        assertTrue(u1.equals(u1));
+        assertTrue(u1.equals(u4));
+        assertTrue(u4.equals(u1));
+    }
+
+    /**
+     * Sequence test with deltas
+     *
+     * @param actual   generated value
+     * @param expected expected value
+     */
+    @Test(dataProvider = "URISequenceWithDelta")
+    public void sequnceWithDeltasTest(String actual, String expected) {
+        // then
+        assertEquals(actual, expected);
     }
 }

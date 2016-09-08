@@ -19,32 +19,23 @@ import static org.jsoup.Jsoup.connect;
  * Warning: the code is a bit imperative - it might be reworked later.
  */
 @Slf4j
-public class EbooksComParser implements Parser {
+public class EbooksComParser extends AbstractParser {
 
-    private Document rootDocument;
-    private CategoryName category;
-    private String link;
-
-    @Override
-    public Parser setLink(String link) {
-        this.link = link;
-        return this;
+    Document openDocument() throws IOException {
+        return connect(link).timeout(0).get();
     }
 
-    @Override
-    public Parser setCategory(CategoryName category) {
-        this.category = category;
-        return this;
+    private Elements findBooks(String htmlArg) {
+        return rootDocument.select(htmlArg);
     }
 
     @Override
     public Optional<List<ParsedBook>> parse() {
         List<ParsedBook> resultList = new LinkedList<>();
 
-
         try {
             rootDocument = openDocument();
-            Elements booksFound = findBooks();
+            Elements booksFound = findBooks("li.search-row.clearfix");
             if ("".equals(booksFound.text())) {
                 return Optional.empty();
             }
@@ -95,7 +86,7 @@ public class EbooksComParser implements Parser {
                 description = descriptionDoc.select("div.short-description").select("[itemprop]").text();
 
 
-                ParsedBook parsedBook =  ParsedBook
+                ParsedBook parsedBook = ParsedBook
                         .builder()
                         .title(title)
                         .year(year)
@@ -116,13 +107,5 @@ public class EbooksComParser implements Parser {
             log.debug("IOException caught", e);
         }
         return Optional.of(resultList);
-    }
-
-    Document openDocument() throws IOException {
-        return connect(link).timeout(0).get();
-    }
-
-    private Elements findBooks() {
-        return rootDocument.select("li.search-row.clearfix");
     }
 }
