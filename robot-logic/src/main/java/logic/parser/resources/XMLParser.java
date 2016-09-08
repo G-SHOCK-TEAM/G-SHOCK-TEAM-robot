@@ -53,14 +53,16 @@ public class XMLParser {
 
             NodeList libraryList = doc.getElementsByTagName("library");
 
+
             for(int i=0; i<libraryList.getLength(); i++) {
 
                 Node library = libraryList.item(i);
                 Element eNode = (Element) library;
                 Class<? extends Parser> parser = setClassType(eNode.getAttribute("id"));
                 NodeList categories = eNode.getElementsByTagName("category");
+                int delta = Integer.valueOf(eNode.getAttribute("delta"));
 
-                map.putAll(setParserMap(categories, parser));
+                map.putAll(setParserMap(categories, parser, delta));
             }
 
         } catch(FileNotFoundException e) {
@@ -77,10 +79,11 @@ public class XMLParser {
      * @param links
      * @return
      */
-    private List<URIGenerator> retrieveLinks(NodeList links) {
+    private List<URIGenerator> retrieveLinks(NodeList links, int delta) {
         List<URIGenerator> parseLinks = new ArrayList<>();
         for(int i=0; i< links.getLength(); i++) {
-            parseLinks.add(new URIGenerator(links.item(i).getTextContent()));
+            parseLinks.add(new URIGenerator(links.item(i).getTextContent(), delta));
+
         }
         return parseLinks;
     }
@@ -120,7 +123,7 @@ public class XMLParser {
      * @param parser
      * @return
      */
-    private Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> setParserMap(NodeList categories, Class<? extends Parser> parser) {
+    private Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> setParserMap(NodeList categories, Class<? extends Parser> parser, int delta) {
 
         Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> map = new HashMap<>();
         Map<CategoryName, List<URIGenerator>> innerMapParser = new EnumMap<>(CategoryName.class);
@@ -128,7 +131,7 @@ public class XMLParser {
         for(int j=0; j<categories.getLength(); j++) {
             Element eCategories = (Element) categories.item(j);
             CategoryName cn = setCategoryName(eCategories.getAttribute("id"));
-            List<URIGenerator> parseLinks = retrieveLinks(eCategories.getElementsByTagName("link"));
+            List<URIGenerator> parseLinks = retrieveLinks(eCategories.getElementsByTagName("link"), delta);
             innerMapParser.put(cn, parseLinks);
             map.put(parser, innerMapParser);
         }

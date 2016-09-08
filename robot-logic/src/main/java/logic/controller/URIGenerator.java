@@ -32,7 +32,7 @@ public class URIGenerator {
      * @param baseURI       - String representing the base URI of the web page.
      * @param startingIndex - int representing starting index to be put in the place of '###' pattern.
      */
-    URIGenerator(String baseURI, int startingIndex) {
+    public URIGenerator(String baseURI, int startingIndex) {
         this.baseURI = baseURI;
         currentIndex = new AtomicInteger(startingIndex);
     }

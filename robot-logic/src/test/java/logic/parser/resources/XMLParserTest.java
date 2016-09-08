@@ -11,16 +11,26 @@ import java.util.*;
 import static domain.CategoryName.*;
 import static org.testng.Assert.assertEquals;
 
+/**
+ * Test for xml parser, we check if our parser parse xml in proper way
+ */
 public class XMLParserTest {
 
     @Test
     public void testOpeningFile() {
+
+        // given
         XMLParser xmlParser = new XMLParser();
 
-        assertEquals(xmlParser.retrieveMapOfLinks(), initialize());
+        // when
+        Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> expectedMap = initializeMap();
+        Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> mapFromXml = xmlParser.retrieveMapOfLinks();
+
+        // then
+        assertEquals(mapFromXml, expectedMap);
     }
 
-    private Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> initialize() {
+    private Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> initializeMap() {
 
         Map<Class<? extends Parser>, Map<CategoryName, List<URIGenerator>>> map = new HashMap<>();
 
@@ -28,26 +38,26 @@ public class XMLParserTest {
         Map<CategoryName, List<URIGenerator>> innerMapParser1 = new EnumMap<>(CategoryName.class);
 
         List<URIGenerator> parser1EduScience = new LinkedList<>();
-        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/computers/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
-        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/science/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
-        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/education/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
-        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/mathematics/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/computers/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
+        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/science/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
+        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/education/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
+        parser1EduScience.add(new URIGenerator("http://www.ebooks.com/subjects/mathematics/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
         List<URIGenerator> parser1Travel = new LinkedList<>();
-        parser1Travel.add(new URIGenerator("http://www.ebooks.com/subjects/travel/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1Travel.add(new URIGenerator("http://www.ebooks.com/subjects/travel/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
         List<URIGenerator> parser1Lifestyle = new LinkedList<>();
-        parser1Lifestyle.add(new URIGenerator("http://www.ebooks.com/subjects/sports-recreation/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
-        parser1Lifestyle.add(new URIGenerator("http://www.ebooks.com/subjects/family-relationships/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1Lifestyle.add(new URIGenerator("http://www.ebooks.com/subjects/sports-recreation/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
+        parser1Lifestyle.add(new URIGenerator("http://www.ebooks.com/subjects/family-relationships/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
         List<URIGenerator> parser1Sex = new LinkedList<>();
-        parser1Sex.add(new URIGenerator("http://www.ebooks.com/subjects/sex/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1Sex.add(new URIGenerator("http://www.ebooks.com/subjects/sex/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
         List<URIGenerator> parser1Medicine = new LinkedList<>();
-        parser1Medicine.add(new URIGenerator("http://www.ebooks.com/subjects/medicine/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1Medicine.add(new URIGenerator("http://www.ebooks.com/subjects/medicine/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
         List<URIGenerator> parser1Adventure = new LinkedList<>();
-        parser1Adventure.add(new URIGenerator("http://www.ebooks.com/subjects/crafts-hobbies/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###"));
+        parser1Adventure.add(new URIGenerator("http://www.ebooks.com/subjects/crafts-hobbies/?sortBy=&sortOrder=&RestrictBy=&countryCode=pl&page=###", 1));
 
 
         innerMapParser1.put(EDUCATION_AND_SCIENCE, parser1EduScience);

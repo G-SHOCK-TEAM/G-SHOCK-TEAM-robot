@@ -1,7 +1,7 @@
 <!--Instead of & you have to use &amp; -->
 
 <links>
-    <library id="ebooks.com">
+    <library id="ebooks.com" delta="1">
         <category id="eduScience">
             <link>http://www.ebooks.com/subjects/computers/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
             <link>http://www.ebooks.com/subjects/science/?sortBy=&amp;sortOrder=&amp;RestrictBy=&amp;countryCode=pl&amp;page=###</link>
